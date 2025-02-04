@@ -30,7 +30,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<MyServices>.value(
             value: mockMyServices,
-            child: Transactions(),
+            child: Transactions(loadBitcoin: true),
           ),
         ),
       );
@@ -62,7 +62,7 @@ void main() {
         MaterialApp(
           home: ChangeNotifierProvider<MyServices>.value(
             value: mockMyServices,
-            child: Transactions(),
+            child: Transactions(loadBitcoin: false),
           ),
         ),
       );

@@ -13,7 +13,8 @@ import '../../../widgets/custom_appbar.dart';
 import '../view_model/explore_view_model.dart';
 
 class Transactions extends StatelessWidget {
-  const Transactions({super.key});
+  final bool loadBitcoin;
+  const Transactions({super.key, required this.loadBitcoin});
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +30,9 @@ class Transactions extends StatelessWidget {
             body: Consumer<MyServices>(builder: (context, snapshot, _) {
               return RefreshIndicator(
                   onRefresh: () async {
-                    snapshot.transactions(snapshot.latestBlockModel.hash!);
+                    loadBitcoin
+                        ? snapshot.transactions(snapshot.latestBlockModel.hash!)
+                        : snapshot.getTezosBlock();
                   },
                   child: ListView.separated(
                       physics: ClampingScrollPhysics(),
@@ -39,8 +42,18 @@ class Transactions extends StatelessWidget {
                             onTap: () {
                               model.navigationService.navigateTo(
                                   transactionDetailsRoute,
-                                  arguments: snapshot
-                                      .blockTransactionModel.tx![index]);
+                                  arguments: loadBitcoin
+                                      ? [
+                                          loadBitcoin,
+                                          snapshot
+                                              .blockTransactionModel.tx![index],
+                                          null
+                                        ]
+                                      : [
+                                          loadBitcoin,
+                                          null,
+                                          snapshot.tezosBlockModel[index]
+                                        ]);
                             },
                             child: Padding(
                               padding: EdgeInsets.symmetric(vertical: 12.h),
@@ -54,8 +67,14 @@ class Transactions extends StatelessWidget {
                                           SizedBox(
                                             width: 300.w,
                                             child: Text(
-                                              snapshot.blockTransactionModel
-                                                  .tx![index].hash!,
+                                              loadBitcoin
+                                                  ? snapshot
+                                                      .blockTransactionModel
+                                                      .tx![index]
+                                                      .hash!
+                                                  : snapshot
+                                                      .tezosBlockModel[index]
+                                                      .hash!,
                                               maxLines: 1,
                                               overflow: TextOverflow.ellipsis,
                                               style: GoogleFonts.inter(
@@ -71,10 +90,14 @@ class Transactions extends StatelessWidget {
                                         ]),
                                     SizedBox(height: 8.h),
                                     Text(
-                                      formatTimestamp(snapshot
-                                          .blockTransactionModel
-                                          .tx![index]
-                                          .time!),
+                                      loadBitcoin
+                                          ? formatTimestamp(snapshot
+                                              .blockTransactionModel
+                                              .tx![index]
+                                              .time!)
+                                          : formatDateTime(snapshot
+                                              .tezosBlockModel[index]
+                                              .timestamp),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: GoogleFonts.inter(
@@ -87,7 +110,9 @@ class Transactions extends StatelessWidget {
                           ),
                       separatorBuilder: (context, index) => Divider(
                           thickness: 1.w, color: Colors.black.withOpacity(0.1)),
-                      itemCount: snapshot.blockTransactionModel.tx!.length));
+                      itemCount: loadBitcoin
+                          ? snapshot.blockTransactionModel.tx!.length
+                          : snapshot.tezosBlockModel.length));
             }),
           );
         });

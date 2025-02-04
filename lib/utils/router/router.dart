@@ -5,7 +5,6 @@ import 'package:cypt_block/utils/router/route_names.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../core/model/blocks_model/block_transaction_model.dart';
 import '../../screens/views/auth/login.dart';
 import '../../screens/views/bottom_navigation/bottom_nav.dart';
 import '../../screens/views/explore/view/transaction_details.dart';
@@ -28,15 +27,20 @@ Route<dynamic> generateRoute(RouteSettings settings) {
         viewToShow: const BottomNav(),
       );
     case transactionsRoute:
+      bool data = settings.arguments as bool;
       return _getPageRoute(
         routeName: settings.name!,
-        viewToShow: const Transactions(),
-      ); //TransactionDetails
+        viewToShow: Transactions(loadBitcoin: data),
+      );
     case transactionDetailsRoute:
-      Tx data = settings.arguments as Tx;
+      List data = settings.arguments as List;
       return _getPageRoute(
         routeName: settings.name!,
-        viewToShow: TransactionDetails(tx: data),
+        viewToShow: TransactionDetails(
+          isBitcoin: data[0],
+          tx: data[1],
+          block: data[2],
+        ),
       );
     default:
       return MaterialPageRoute(

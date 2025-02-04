@@ -14,8 +14,9 @@ class HttpService {
   String get baseUrl => _baseUrl;
 
   //get requests without token
-  Future<dynamic> get(String path) async {
-    final String url = baseUrl + path;
+  Future<dynamic> get(String path, [String tezosbaseUrl = '']) async {
+    String baseURI = tezosbaseUrl.isEmpty ? _baseUrl : tezosbaseUrl;
+    final String url = baseURI + path;
     log('Request::URL: $url');
     final response =
         await http.get(Uri.parse(url)).timeout(const Duration(seconds: 45));

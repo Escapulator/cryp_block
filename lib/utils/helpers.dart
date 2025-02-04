@@ -46,7 +46,7 @@ formatDate(value) {
 }
 
 formatDateTime(value) {
-  final df = DateFormat('d MMMM, y hh:mm a');
+  final df = DateFormat('yyyy-MM-dd • HH:mm');
   return df.format(DateTime.parse(value));
 }
 

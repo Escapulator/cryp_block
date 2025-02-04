@@ -4,4 +4,5 @@ class Paths {
   static const String latestblock = 'latestblock';
   static const String blockTransactions = '/rawblock/';
   static const String details = 'rawblock/';
+  static const String tezosBlock = '/blocks';
 }

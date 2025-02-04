@@ -1,3 +1,4 @@
+import 'package:cypt_block/core/model/blocks_model/tezos_block.dart';
 import 'package:cypt_block/utils/assets.dart';
 import 'package:cypt_block/utils/helpers.dart';
 import 'package:flutter/material.dart';
@@ -10,8 +11,11 @@ import '../../../widgets/custom_appbar.dart';
 import '../../../widgets/details_tile.dart';
 
 class TransactionDetails extends StatelessWidget {
-  final Tx tx;
-  const TransactionDetails({super.key, required this.tx});
+  final Tx? tx;
+  final TezosBlockModel? block;
+  final bool isBitcoin;
+  const TransactionDetails(
+      {super.key, required this.isBitcoin, this.tx, this.block});
 
   @override
   Widget build(BuildContext context) {
@@ -26,32 +30,39 @@ class TransactionDetails extends StatelessWidget {
         child: Column(children: [
           DetailsTile(
             qey: 'Hash',
-            value: tx.blockIndex.toString(),
+            value: isBitcoin ? tx!.blockIndex.toString() : block!.hash!,
           ),
           Divider(color: Colors.black.withOpacity(.08)),
           DetailsTile(
             qey: 'Time',
-            value: formatTimestamp(tx.time!),
+            value: isBitcoin
+                ? formatTimestamp(tx!.time!)
+                : formatDateTime(block!.timestamp),
           ),
           Divider(color: Colors.black.withOpacity(.08)),
           DetailsTile(
-            qey: 'Size',
-            value: tx.size.toString(),
+            qey: isBitcoin ? 'Size' : 'Level',
+            value: isBitcoin ? tx!.size.toString() : block!.level.toString(),
           ),
           Divider(color: Colors.black.withOpacity(.08)),
           DetailsTile(
-            qey: 'Block index',
-            value: tx.blockIndex.toString(),
+            qey: isBitcoin ? 'Block index' : 'Reward',
+            value: isBitcoin
+                ? tx!.blockIndex.toString()
+                : block!.reward.toString(),
           ),
           Divider(color: Colors.black.withOpacity(.08)),
           DetailsTile(
-            qey: 'Height',
-            value: tx.blockHeight.toString(),
+            qey: isBitcoin ? 'Height' : 'Bonus',
+            value: isBitcoin
+                ? tx!.blockHeight.toString()
+                : block!.bonus.toString(),
           ),
           Divider(color: Colors.black.withOpacity(.08)),
           DetailsTile(
-            qey: 'Received time',
-            value: formatTimestamp(tx.time!),
+            qey: isBitcoin ? 'Received time' : 'Fees',
+            value:
+                isBitcoin ? formatTimestamp(tx!.time!) : block!.fees.toString(),
           ),
           SizedBox(height: 30.h),
           ListTile(

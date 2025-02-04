@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../../core/model/response_model/error_model.dart';
 import '../../../core/model/response_model/success_model.dart';
 import '../../../core/services/myservices.dart';
 import '../../../utils/base_model.dart';
@@ -34,30 +33,21 @@ class AuthViewModel extends BaseModel {
 
   login(BuildContext context) async {
     setBusy(true);
-    final response = await context.read<MyServices>().getLatestBlock();
-    if (response is ErrorModel) {
-      setBusy(false);
-      showErrorToast('Invalid Email or Password Provided');
-      return ErrorModel(response.error);
-    }
-    if (response is SuccessModel) {
-      setBusy(false);
+    final response = await Future.wait([
+      context.read<MyServices>().getLatestBlock(),
+      context.read<MyServices>().getTezosBlock()
+    ]);
+
+    bool bitcoinSuccess = response[0] is SuccessModel;
+    bool tezosSuccess = response[1] is SuccessModel;
+
+    setBusy(false);
+
+    if (bitcoinSuccess && tezosSuccess) {
       showToast('Login Successful');
       _navigationService.navigateandRemoveRoute(dashboardRoute);
-      return SuccessModel(response.data);
+    } else {
+      showErrorToast('Invalid Email or Password Provided');
     }
-    // setBusy(true);
-    // final result = _MyServices.login(loginPayload.toJson());
-    // if (result is ErrorModel) {
-    //   setBusy(false);
-    //   showErrorToast(result.error);
-    //   return ErrorModel(result.error);
-    // }
-    // if (result is SuccessModel) {
-    //   setBusy(false);
-    //   showToast(result.data['message']);
-    //   _navigationService.navigateandRemoveRoute(dashboardRoute);
-    //   return SuccessModel(result.data);
-    // }
   }
 }

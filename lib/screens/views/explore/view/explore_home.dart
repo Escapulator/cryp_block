@@ -117,13 +117,23 @@ class ExploreHome extends StatelessWidget {
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           children: [
-                            AssetsTile(
-                              assetName: AppAssets.bitCoin,
-                              title: 'Bitcoin',
-                              subTitle: 'BTC',
-                              amount: '₦24,500,00',
-                              trailing: '1.76%',
-                              trend: true,
+                            InkResponse(
+                              splashColor: Colors.transparent,
+                              onTap: () {
+                                context.read<MyServices>().hasTransactions
+                                    ? model.navigationService.navigateTo(
+                                        transactionsRoute,
+                                        arguments: true)
+                                    : model.getTransactionList(context);
+                              },
+                              child: AssetsTile(
+                                assetName: AppAssets.bitCoin,
+                                title: 'Bitcoin',
+                                subTitle: 'BTC',
+                                amount: '₦24,500,00',
+                                trailing: '1.76%',
+                                trend: true,
+                              ),
                             ),
                             AssetsTile(
                               assetName: AppAssets.ethereumC,
@@ -133,13 +143,20 @@ class ExploreHome extends StatelessWidget {
                               trailing: '6.76%',
                               trend: false,
                             ),
-                            AssetsTile(
-                              assetName: AppAssets.tezos,
-                              title: 'Tezos',
-                              subTitle: 'XTZ',
-                              amount: '₦4,500,00',
-                              trailing: '9.06%',
-                              trend: true,
+                            InkResponse(
+                              onTap: () {
+                                model.navigationService.navigateTo(
+                                    transactionsRoute,
+                                    arguments: false);
+                              },
+                              child: AssetsTile(
+                                assetName: AppAssets.tezos,
+                                title: 'Tezos',
+                                subTitle: 'XTZ',
+                                amount: '₦4,500,00',
+                                trailing: '9.06%',
+                                trend: true,
+                              ),
                             ),
                           ]),
                     ]),
@@ -167,12 +184,7 @@ class ExploreHome extends StatelessWidget {
                               ),
                               InkResponse(
                                   splashColor: Colors.transparent,
-                                  onTap: () {
-                                    context.read<MyServices>().hasTransactions
-                                        ? model.navigationService
-                                            .navigateTo(transactionsRoute)
-                                        : model.getTransactionList(context);
-                                  },
+                                  onTap: () {},
                                   child: Text(
                                     'See all',
                                     style: GoogleFonts.inter(
