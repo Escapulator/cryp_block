@@ -4,6 +4,7 @@ A new Flutter project.
 
 ## Getting Started
 
+Please note that I a mobile developer, I don't do backend, but I can collaborate with backend developer to achieve the desired object as I have done in many of my previous roles. I don't want to attempt a backend, knowing fully well that I am not skilled at it, and will struggle if hired to do a backend.
 Demo and APK @ https://drive.google.com/drive/folders/1cUZ5tRpLrsRipytfpHrWOWDqbv6rrsF3?usp=sharing
 
 This project is a starting point for a Flutter application.
